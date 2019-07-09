@@ -1,6 +1,7 @@
 package com.java1234.dao;
 
 import com.java1234.model.User;
+import com.java1234.util.MD5Util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +14,7 @@ public class UserDao {
         String sql = "select * from t_user where userName=? and password=?";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1, user.getUserName());
-        pstmt.setString(2, user.getPassword());
+        pstmt.setString(2, MD5Util.EncodeStrdByMd5(user.getPassword()));
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
             resultUser = new User();

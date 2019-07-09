@@ -5,10 +5,7 @@ import com.java1234.model.User;
 import com.java1234.util.DbUtil;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
 
@@ -34,6 +31,7 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
+        String remember = request.getParameter("remember");
 
         Connection con = null;
         try {
@@ -41,14 +39,22 @@ public class LoginServlet extends HttpServlet {
             User user = new User(userName, password);
             User currentUser = userDao.login(con, user);
             if (currentUser == null) {
+                //登陆失败
                 request.setAttribute("user", user);
                 request.setAttribute("error", "用户名或密码错误！");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             } else {
+                //登陆成功
+                if (remember != null &&remember.equals("remember-me")) {
+                    Cookie cookie = new Cookie("user", userName + "-" + password);
+                    cookie.setMaxAge(1 * 60 * 60 * 24 * 7);
+                    response.addCookie(cookie);
+                }
                 session.setAttribute("currentUser", currentUser);
                 response.sendRedirect("main.jsp");
             }
         } catch (Exception e) {
+            response.sendRedirect("error.jsp");
             e.printStackTrace();
         } finally {
             try {
