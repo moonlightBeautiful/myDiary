@@ -28,6 +28,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("utf-8");
         HttpSession session = request.getSession();
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
@@ -45,13 +46,13 @@ public class LoginServlet extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             } else {
                 //登陆成功
-                if (remember != null &&remember.equals("remember-me")) {
+                if (remember != null && remember.equals("remember-me")) {
                     Cookie cookie = new Cookie("user", userName + "-" + password);
                     cookie.setMaxAge(1 * 60 * 60 * 24 * 7);
                     response.addCookie(cookie);
                 }
                 session.setAttribute("currentUser", currentUser);
-                response.sendRedirect("main.jsp");
+                request.getRequestDispatcher("main").forward(request, response);
             }
         } catch (Exception e) {
             response.sendRedirect("error.jsp");
