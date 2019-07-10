@@ -1,17 +1,25 @@
 package com.java1234.web;
 
+import com.java1234.dao.DiaryDao;
+import com.java1234.model.Diary;
+import com.java1234.model.PageBean;
+import com.java1234.util.DbUtil;
+import com.java1234.util.PropertiesUtil;
+import com.java1234.util.StringUtil;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
+import java.util.List;
 
 public class MainServlet extends HttpServlet {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
+    DbUtil dbUtil = new DbUtil();
+    DiaryDao diaryDao = new DiaryDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -23,8 +31,65 @@ public class MainServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
-        request.setAttribute("mainPage", "diary/diaryList.jsp");
-        request.getRequestDispatcher("mainTemp.jsp").forward(request, response);
+        String currentPage = request.getParameter("page");
+        if (StringUtil.isEmpty(currentPage)) {
+            currentPage = "1";
+        }
+        Connection con = null;
+        PageBean pageBean = new PageBean(Integer.parseInt(currentPage), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
+        try {
+            con = dbUtil.getCon();
+            /*
+              request保存前台需要的数据和转发到主页
+             */
+            List<Diary> diaryList = diaryDao.diaryList(con, pageBean);
+            int totalNum = diaryDao.diaryCount(con);
+            String pageCode = this.genPagation(totalNum, Integer.parseInt(currentPage), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
+            request.setAttribute("pageCode", pageCode);
+            request.setAttribute("diaryList", diaryList);
+            request.setAttribute("mainPage", "diary/diaryList.jsp");
+            request.getRequestDispatcher("mainTemp.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成分页字符串
+     *
+     * @param totalNum    日志总数
+     * @param currentPage 当前页
+     * @param pageSize    每页大小
+     * @return
+     */
+    private String genPagation(int totalNum, int currentPage, int pageSize) {
+        //总页数
+        int totalPage = totalNum % pageSize == 0 ? totalNum / pageSize : totalNum / pageSize + 1;
+        //分页字符串，首页和尾页是必须要的
+        StringBuffer pageCode = new StringBuffer();
+        pageCode.append("<li><a href='main?page=1'>首页</a></li>");
+        if (currentPage == 1) {
+            pageCode.append("<li class='disabled'><a href='#'>上一页</a></li>");
+        } else {
+            pageCode.append("<li><a href='main?page=" + (currentPage - 1) + "'>上一页</a></li>");
+        }
+        for (int i = currentPage - 2; i <= currentPage + 2; i++) {
+            if (i < 1 || i > totalPage) {
+                continue;
+            }
+            if (i == currentPage) {
+                pageCode.append("<li class='active'><a href='#'>" + i + "</a></li>");
+            } else {
+                pageCode.append("<li><a href='main?page=" + i + "'>" + i + "</a></li>");
+            }
+        }
+        if (currentPage == totalPage) {
+            pageCode.append("<li class='disabled'><a href='#'>下一页</a></li>");
+        } else {
+            pageCode.append("<li><a href='main?page=" + (currentPage + 1) + "'>下一页</a></li>");
+        }
+        pageCode.append("<li><a href='main?page=" + totalPage + "'>尾页</a></li>");
+        return pageCode.toString();
     }
 
 
