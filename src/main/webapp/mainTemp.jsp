@@ -31,27 +31,10 @@
         </div>
         <!-- 个人信息和日志分类 -->
         <div class="span3">
-            <div class="data_list">
-                <div class="data_list_title">
-                    <img src="${pageContext.request.contextPath}/images/user_icon.png"/>
-                    个人中心
-                </div>
-            </div>
-            <div class="data_list">
-                <div class="data_list_title">
-                    <img src="${pageContext.request.contextPath}/images/byType_icon.png"/>
-                    按日志类别
-                </div>
-            </div>
-
-            <div class="data_list">
-                <div class="data_list_title">
-                    <img src="${pageContext.request.contextPath}/images/byDate_icon.png"/>
-                    按日志日期
-                </div>
-            </div>
+            <jsp:include page="${pageContext.request.contextPath}/diary/diaryRightList.jsp"></jsp:include>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>

@@ -3,11 +3,13 @@ package com.java1234.dao;
 import com.java1234.model.Diary;
 import com.java1234.model.PageBean;
 import com.java1234.util.DateUtil;
+import com.java1234.util.DbUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DiaryDao {
@@ -40,6 +42,43 @@ public class DiaryDao {
             return rs.getInt("total");
         } else {
             return 0;
+        }
+    }
+
+    public List<Diary> diaryReleaseDateCountList(Connection con) throws Exception {
+        List<Diary> diaryCountList = new ArrayList<Diary>();
+        String sql = "SELECT DATE_FORMAT(releaseDate,'%Y年%m月') as releaseDateStr ,COUNT(*) AS diaryCount  FROM t_diary GROUP BY DATE_FORMAT(releaseDate,'%Y年%m月') ORDER BY DATE_FORMAT(releaseDate,'%Y年%m月') DESC;";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            Diary diary = new Diary();
+            diary.setReleaseDateStr(rs.getString("releaseDateStr"));
+            diary.setDiaryCount(rs.getInt("diaryCount"));
+            diaryCountList.add(diary);
+        }
+        return diaryCountList;
+    }
+
+    public static void main(String[] args) throws Exception {
+        Integer i = 2;
+        i.toString();
+
+        DbUtil dbUtil = new DbUtil();
+        DiaryDao diaryDao = new DiaryDao();
+        Connection con = dbUtil.getCon();
+        String sql = "select * from t_diary";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            Diary diary = new Diary();
+            diary.setDiaryId(rs.getInt("diaryId"));
+            diary.setTitle(rs.getString("title"));
+            diary.setContent(rs.getString("content"));
+            diary.setReleaseDate(DateUtil.formatStrToDate(rs.getString("releaseDate"), "yyyy-MM-dd HH:mm:ss"));
+            String s1 = rs.getString("releaseDate");
+            Date date = rs.getDate("releaseDate");
+            String s2 = rs.getString("diaryId");
+            String s3 = rs.getString("diaryId");
         }
     }
 }

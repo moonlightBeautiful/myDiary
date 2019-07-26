@@ -1,6 +1,7 @@
 package com.java1234.web;
 
 import com.java1234.dao.DiaryDao;
+import com.java1234.dao.DiaryTypeDao;
 import com.java1234.model.Diary;
 import com.java1234.model.PageBean;
 import com.java1234.util.DbUtil;
@@ -11,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
@@ -20,6 +22,7 @@ public class MainServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     DbUtil dbUtil = new DbUtil();
     DiaryDao diaryDao = new DiaryDao();
+    DiaryTypeDao diaryTypeDao = new DiaryTypeDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -31,6 +34,7 @@ public class MainServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
+        HttpSession session = request.getSession();
         String currentPage = request.getParameter("page");
         if (StringUtil.isEmpty(currentPage)) {
             currentPage = "1";
@@ -45,9 +49,14 @@ public class MainServlet extends HttpServlet {
             List<Diary> diaryList = diaryDao.diaryList(con, pageBean);
             int totalNum = diaryDao.diaryCount(con);
             String pageCode = this.genPagation(totalNum, Integer.parseInt(currentPage), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
-            request.setAttribute("pageCode", pageCode);
+            //日志列表
             request.setAttribute("diaryList", diaryList);
+            request.setAttribute("pageCode", pageCode);
             request.setAttribute("mainPage", "diary/diaryList.jsp");
+            //日志类别
+            session.setAttribute("diaryTypeCountList", diaryTypeDao.diaryTypeCountList(con));
+            session.setAttribute("diaryReleaseDateCountList", diaryDao.diaryReleaseDateCountList(con));
+            //数据准备好了，转发的主页
             request.getRequestDispatcher("mainTemp.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

@@ -7,8 +7,16 @@ public class Diary {
     private int diaryId;
     private String title;
     private String content;
+    /**
+     * 默认类别id为-1，则是没有分类的意思。
+     */
     private int typeId = -1;
     private Date releaseDate;
+    /**
+     * 为了前台输出对发布日期（Date releaseDate）设置
+     */
+    private String releaseDateStr;
+    private int diaryCount;
 
     public int getDiaryId() {
         return diaryId;
@@ -48,6 +56,22 @@ public class Diary {
 
     public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public String getReleaseDateStr() {
+        return releaseDateStr;
+    }
+
+    public void setReleaseDateStr(String releaseDateStr) {
+        this.releaseDateStr = releaseDateStr;
+    }
+
+    public int getDiaryCount() {
+        return diaryCount;
+    }
+
+    public void setDiaryCount(int diaryCount) {
+        this.diaryCount = diaryCount;
     }
 
 
