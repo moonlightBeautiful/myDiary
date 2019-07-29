@@ -35,7 +35,54 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         HttpSession session = request.getSession();
+        String s_typeId = request.getParameter("s_typeId");
+        String s_releaseDateStr = request.getParameter("s_releaseDateStr");
+        String s_title = request.getParameter("s_title");
+        String all = request.getParameter("all");
         String currentPage = request.getParameter("page");
+
+        Diary diary = new Diary();
+        if ("true".equals(all)) {
+            if (StringUtil.isNotEmpty(s_title)) {
+                diary.setTitle(s_title);
+            }
+            session.removeAttribute("s_releaseDateStr");
+            session.removeAttribute("s_typeId");
+            session.setAttribute("s_title", s_title);
+        } else {
+            if (StringUtil.isNotEmpty(s_typeId)) {
+                diary.setTypeId(Integer.parseInt(s_typeId));
+                session.setAttribute("s_typeId", s_typeId);
+                session.removeAttribute("s_releaseDateStr");
+                session.removeAttribute("s_title");
+            }
+            if (StringUtil.isNotEmpty(s_releaseDateStr)) {
+                s_releaseDateStr = new String(s_releaseDateStr.getBytes("ISO-8859-1"), "UTF-8");
+                diary.setReleaseDateStr(s_releaseDateStr);
+                session.setAttribute("s_releaseDateStr", s_releaseDateStr);
+                session.removeAttribute("s_typeId");
+                session.removeAttribute("s_title");
+            }
+            if (StringUtil.isEmpty(s_typeId)) {
+                Object o = session.getAttribute("s_typeId");
+                if (o != null) {
+                    diary.setTypeId(Integer.parseInt((String) o));
+                }
+            }
+            if (StringUtil.isEmpty(s_releaseDateStr)) {
+                Object o = session.getAttribute("s_releaseDateStr");
+                if (o != null) {
+                    diary.setReleaseDateStr((String) o);
+                }
+            }
+            if (StringUtil.isEmpty(s_title)) {
+                Object o = session.getAttribute("s_title");
+                if (o != null) {
+                    diary.setTitle((String) o);
+                }
+            }
+        }
+
         if (StringUtil.isEmpty(currentPage)) {
             currentPage = "1";
         }
@@ -46,8 +93,8 @@ public class MainServlet extends HttpServlet {
             /*
               request保存前台需要的数据和转发到主页
              */
-            List<Diary> diaryList = diaryDao.diaryList(con, pageBean);
-            int totalNum = diaryDao.diaryCount(con);
+            List<Diary> diaryList = diaryDao.diaryList(con, pageBean, diary);
+            int totalNum = diaryDao.diaryCount(con, diary);
             String pageCode = this.genPagation(totalNum, Integer.parseInt(currentPage), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
             //日志列表
             request.setAttribute("diaryList", diaryList);

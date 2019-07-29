@@ -4,6 +4,7 @@ import com.java1234.model.Diary;
 import com.java1234.model.PageBean;
 import com.java1234.util.DateUtil;
 import com.java1234.util.DbUtil;
+import com.java1234.util.StringUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,9 +15,18 @@ import java.util.List;
 
 public class DiaryDao {
 
-    public List<Diary> diaryList(Connection con, PageBean pageBean) throws Exception {
+    public List<Diary> diaryList(Connection con, PageBean pageBean, Diary s_diary) throws Exception {
         List<Diary> diaryList = new ArrayList<Diary>();
         StringBuffer sb = new StringBuffer("select * from t_diary t1,t_diaryType t2 where t1.typeId=t2.diaryTypeId ");
+        if (StringUtil.isNotEmpty(s_diary.getTitle())) {
+            sb.append(" and t1.title like '%" + s_diary.getTitle() + "%'");
+        }
+        if (s_diary.getTypeId() != -1) {
+            sb.append(" and t1.typeId=" + s_diary.getTypeId());
+        }
+        if (StringUtil.isNotEmpty(s_diary.getReleaseDateStr())) {
+            sb.append(" and DATE_FORMAT(t1.releaseDate,'%Y年%m月')='" + s_diary.getReleaseDateStr() + "'");
+        }
         sb.append(" order by t1.releaseDate desc");
         if (pageBean != null) {
             sb.append(" limit " + pageBean.getStart() + "," + pageBean.getPageSize());
@@ -34,8 +44,17 @@ public class DiaryDao {
         return diaryList;
     }
 
-    public int diaryCount(Connection con) throws Exception {
+    public int diaryCount(Connection con, Diary s_diary) throws Exception {
         StringBuffer sb = new StringBuffer("select count(*) as total from t_diary t1,t_diaryType t2 where t1.typeId=t2.diaryTypeId ");
+        if (StringUtil.isNotEmpty(s_diary.getTitle())) {
+            sb.append(" and t1.title like '%" + s_diary.getTitle() + "%'");
+        }
+        if (s_diary.getTypeId() != -1) {
+            sb.append(" and t1.typeId=" + s_diary.getTypeId());
+        }
+        if (StringUtil.isNotEmpty(s_diary.getReleaseDateStr())) {
+            sb.append(" and DATE_FORMAT(t1.releaseDate,'%Y年%m月')='" + s_diary.getReleaseDateStr() + "'");
+        }
         PreparedStatement pstmt = con.prepareStatement(sb.toString());
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {

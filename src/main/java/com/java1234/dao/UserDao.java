@@ -2,6 +2,7 @@ package com.java1234.dao;
 
 import com.java1234.model.User;
 import com.java1234.util.MD5Util;
+import com.java1234.util.PropertiesUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,6 +22,9 @@ public class UserDao {
             resultUser.setUserId(rs.getInt("userId"));
             resultUser.setUserName(rs.getString("userName"));
             resultUser.setPassword(rs.getString("password"));
+            resultUser.setNickName(rs.getString("nickName"));
+            resultUser.setImageName(PropertiesUtil.getValue("imageFile") + rs.getString("imageName"));
+            resultUser.setMood(rs.getString("mood"));
         }
         return resultUser;
     }

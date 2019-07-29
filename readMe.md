@@ -14,7 +14,11 @@ jsp日记本系统
             t_user
             t_diary
             t_diaryType
-    3.
+    3.技术：
+        就纯j2se+jsp
 学习到：
     1.sql语句中可以对日志进行格式化输出字符串的函数；
-        DATE_FORMAT(releaseDate,'%Y年%m月')     
+        DATE_FORMAT(releaseDate,'%Y年%m月')    
+    2.改进：学习完了之后，改进一下
+        dao查询，设置一个Map参数
+        前台参数统一设置action="操作" 
