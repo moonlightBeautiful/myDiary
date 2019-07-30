@@ -11,6 +11,7 @@ public class Diary {
      * 默认类别id为-1，则是没有分类的意思。
      */
     private int typeId = -1;
+    private String typeName;
     private Date releaseDate;
     /**
      * 为了前台输出对发布日期（Date releaseDate）设置
@@ -74,5 +75,12 @@ public class Diary {
         this.diaryCount = diaryCount;
     }
 
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
 }

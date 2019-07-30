@@ -100,4 +100,21 @@ public class DiaryDao {
             String s3 = rs.getString("diaryId");
         }
     }
+
+    public Diary diaryShow(Connection con, String diaryId) throws Exception {
+        String sql = "select * from t_diary t1,t_diaryType t2 where t1.typeId=t2.diaryTypeId and t1.diaryId=?";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, diaryId);
+        ResultSet rs = pstmt.executeQuery();
+        Diary diary = new Diary();
+        if (rs.next()) {
+            diary.setDiaryId(rs.getInt("diaryId"));
+            diary.setTitle(rs.getString("title"));
+            diary.setContent(rs.getString("content"));
+            diary.setTypeId(rs.getInt("typeId"));
+            diary.setTypeName(rs.getString("typeName"));
+            diary.setReleaseDate(DateUtil.formatStrToDate(rs.getString("releaseDate"), "yyyy-MM-dd HH:mm:ss"));
+        }
+        return diary;
+    }
 }
