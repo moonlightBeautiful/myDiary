@@ -49,6 +49,15 @@
         <servlet-name>diaryServlet</servlet-name>
         <url-pattern>/diary</url-pattern>
     </servlet-mapping>
+    <!-- diaryType -->
+    <servlet>
+        <servlet-name>diaryTypeServlet</servlet-name>
+        <servlet-class>com.java1234.web.DiaryTypeServlet</servlet-class>
+    </servlet>
 
+    <servlet-mapping>
+        <servlet-name>diaryTypeServlet</servlet-name>
+        <url-pattern>/diaryType</url-pattern>
+    </servlet-mapping>
 
 </web-app>

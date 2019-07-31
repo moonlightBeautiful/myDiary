@@ -31,4 +31,18 @@ public class DiaryTypeDao {
         }
         return diaryTypeCountList;
     }
+
+    public List<DiaryType> diaryTypeList(Connection con) throws Exception {
+        List<DiaryType> diaryTypeList = new ArrayList<DiaryType>();
+        String sql = "select * from t_diaryType";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            DiaryType diaryType = new DiaryType();
+            diaryType.setDiaryTypeId(rs.getInt("diaryTypeId"));
+            diaryType.setTypeName(rs.getString("typeName"));
+            diaryTypeList.add(diaryType);
+        }
+        return diaryTypeList;
+    }
 }
