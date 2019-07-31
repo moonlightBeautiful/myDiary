@@ -117,4 +117,30 @@ public class DiaryDao {
         }
         return diary;
     }
+
+    public int diaryAdd(Connection con, Diary diary) throws Exception {
+        String sql = "insert into t_diary values(null,?,?,?,now())";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, diary.getTitle());
+        pstmt.setString(2, diary.getContent());
+        pstmt.setInt(3, diary.getTypeId());
+        return pstmt.executeUpdate();
+    }
+
+    public int diaryDelete(Connection con, String diaryId) throws Exception {
+        String sql = "delete from t_diary where diaryId=?";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, diaryId);
+        return pstmt.executeUpdate();
+    }
+
+    public int diaryUpdate(Connection con, Diary diary) throws Exception {
+        String sql = "update t_diary set title=?,content=?,typeId=? where diaryId=?";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, diary.getTitle());
+        pstmt.setString(2, diary.getContent());
+        pstmt.setInt(3, diary.getTypeId());
+        pstmt.setInt(4, diary.getDiaryId());
+        return pstmt.executeUpdate();
+    }
 }

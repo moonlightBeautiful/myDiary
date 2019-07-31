@@ -19,9 +19,19 @@ public class Diary {
     private String releaseDateStr;
     private int diaryCount;
 
+    public Diary() {
+    }
+
+    public Diary(String title, String content, int typeId) {
+        this.title = title;
+        this.content = content;
+        this.typeId = typeId;
+    }
+
     public int getDiaryId() {
         return diaryId;
     }
+
 
     public void setDiaryId(int diaryId) {
         this.diaryId = diaryId;

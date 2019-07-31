@@ -100,7 +100,7 @@ public class MainServlet extends HttpServlet {
             request.setAttribute("diaryList", diaryList);
             request.setAttribute("pageCode", pageCode);
             request.setAttribute("mainPage", "diary/diaryList.jsp");
-            //日志类别
+            //日志分类信息，存在session中
             session.setAttribute("diaryTypeCountList", diaryTypeDao.diaryTypeCountList(con));
             session.setAttribute("diaryReleaseDateCountList", diaryDao.diaryReleaseDateCountList(con));
             //数据准备好了，转发的主页
