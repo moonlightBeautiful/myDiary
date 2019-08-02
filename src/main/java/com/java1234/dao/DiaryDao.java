@@ -143,4 +143,16 @@ public class DiaryDao {
         pstmt.setInt(4, diary.getDiaryId());
         return pstmt.executeUpdate();
     }
+
+    public boolean existDiaryWithTypeId(Connection con, String typeId) throws Exception {
+        String sql = "select * from t_diary where typeId=?";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, typeId);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

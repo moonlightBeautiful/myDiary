@@ -45,4 +45,39 @@ public class DiaryTypeDao {
         }
         return diaryTypeList;
     }
+
+    public DiaryType diaryTypeShow(Connection con, String diaryTypeId) throws Exception {
+        String sql = "SELECT * from t_diaryType where diaryTypeId=?";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, diaryTypeId);
+        ResultSet rs = pstmt.executeQuery();
+        DiaryType diaryType = new DiaryType();
+        if (rs.next()) {
+            diaryType.setDiaryTypeId(rs.getInt("diaryTypeId"));
+            diaryType.setTypeName(rs.getString("typeName"));
+        }
+        return diaryType;
+    }
+
+    public int diaryTypeAdd(Connection con, DiaryType diaryType) throws Exception {
+        String sql = "insert into t_diaryType values(null,?)";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, diaryType.getTypeName());
+        return pstmt.executeUpdate();
+    }
+
+    public int diaryTypeUpdate(Connection con, DiaryType diaryType) throws Exception {
+        String sql = "update t_diaryType set typeName=? where diaryTypeId=?";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, diaryType.getTypeName());
+        pstmt.setInt(2, diaryType.getDiaryTypeId());
+        return pstmt.executeUpdate();
+    }
+
+    public int diaryTypeDelete(Connection con, String diaryTypeId) throws Exception {
+        String sql = "delete from t_diaryType where diaryTypeId=?";
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, diaryTypeId);
+        return pstmt.executeUpdate();
+    }
 }

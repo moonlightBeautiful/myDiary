@@ -6,6 +6,24 @@ public class DiaryType {
     private String typeName;
     private int diaryCount;
 
+    public DiaryType() {
+    }
+
+    public DiaryType(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public DiaryType(int diaryTypeId, String typeName) {
+        this.diaryTypeId = diaryTypeId;
+        this.typeName = typeName;
+    }
+
+    public DiaryType(int diaryTypeId, String typeName, int diaryCount) {
+        this.diaryTypeId = diaryTypeId;
+        this.typeName = typeName;
+        this.diaryCount = diaryCount;
+    }
+
     public int getDiaryTypeId() {
         return diaryTypeId;
     }

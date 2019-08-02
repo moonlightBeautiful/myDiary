@@ -60,4 +60,15 @@
         <url-pattern>/diaryType</url-pattern>
     </servlet-mapping>
 
+    <!-- user -->
+    <servlet>
+        <servlet-name>userServlet</servlet-name>
+        <servlet-class>com.java1234.web.UserServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>userServlet</servlet-name>
+        <url-pattern>/user</url-pattern>
+    </servlet-mapping>
+
 </web-app>

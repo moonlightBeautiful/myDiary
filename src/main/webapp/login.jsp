@@ -105,8 +105,8 @@
         &nbsp;&nbsp;&nbsp;&nbsp;
         <button class="btn btn-large btn-primary" type="button">重置</button>
 
-        <p align="center" style="padding-top: 15px;">版权所有 2014 Java知识分享网 <a href="http://www.java1234.com"
-                                                                            target="_blank">http://www.java1234.com</a>
+        <p align="center" style="padding-top: 15px;">版权所有 gaoxu miekio知识分享网 <a href="http://www.google.com"
+                                                                               target="_blank">http://www.google.com</a>
         </p>
     </form>
 </div>
